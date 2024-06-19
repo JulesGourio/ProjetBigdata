@@ -52,16 +52,18 @@ def execute_job():
         subprocess.run(['ssh', master, 'spark-submit', program_path, input_path, output_path])
     elif program.endswith('.jar'):
         # Exécuter les scripts nécessaires pour les fichiers .jar sur le nœud master
+        subprocess.run(['ssh', master, 'cd /home/sujet-tp-scale/'])
+
         subprocess.run(['ssh', master, 'source', 'comp.sh'])
         subprocess.run(['ssh', master, 'source', 'generate.sh', 'filesample.txt', '20'])
-        subprocess.run(['ssh', master, 'source', 'start.sh'])
+        subprocess.run(['ssh', master, 'source', '../start1.sh'])
         subprocess.run(['ssh', master, 'source', 'copy.sh'])
         subprocess.run(['ssh', master, 'source', 'run.sh'])
-        subprocess.run(['ssh', master, 'spark-submit', '--class', main_class, program_path, input_path, output_path])
+        #subprocess.run(['ssh', master, 'spark-submit', '--class', main_class, program_path, input_path, output_path])
+        subprocess.run(['ssh', master, 'hdfs', 'dfs', '-getmerge', output_path + '/*', output_local_path])
         subprocess.run(['ssh', master, 'source', 'stop.sh'])
 
     # Récupérer les résultats depuis HDFS vers le système de fichiers local sur le nœud master
-    subprocess.run(['ssh', master, 'hdfs', 'dfs', '-getmerge', output_path + '/*', output_local_path])
 
     # Charger les résultats dans un DataFrame Pandas (optionnel)
     #df = pd.read_csv(output_local_path)

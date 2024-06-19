@@ -62,6 +62,10 @@
         <h2>Participants</h2>
         <p>Maxime Baba, Mathilde Ferreira, Félix Foucher de Brandois, Jules Gourio</p>
     </div>
+    <div class="confetti-section">
+        <button id="confetti-button">Lancer les Confettis!</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         let selectedData = null;
         let selectedProgram = null;
@@ -80,7 +84,6 @@
                 selectedProgram = (selectedProgram === element) ? null : element;
                 document.getElementById('selected-program').value = selectedProgram ? selectedProgram.textContent : '';
 
-                // Show or hide the main class input based on the selected program
                 const mainClassInput = document.getElementById('main-class');
                 if (selectedProgram && selectedProgram.textContent.endsWith('.jar')) {
                     mainClassInput.style.display = 'block';
@@ -91,8 +94,15 @@
             element.classList.toggle('selected');
         }
 
-        // Initially hide the main class input field
         document.getElementById('main-class').style.display = 'none';
+
+        document.getElementById('confetti-button').addEventListener('click', function() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        });
     </script>
 </body>
 </html>
