@@ -42,6 +42,7 @@
             <input type="hidden" name="program" id="selected-program" required>
             <input type="hidden" name="input_path" id="selected-data" required>
             <input type="text" name="output_path" placeholder="HDFS Output Path" required>
+            <input type="text" name="main_class" id="main-class" placeholder="Main Class (for .jar files only)">
             <button type="submit">Execute</button>
         </form>
     </div>
@@ -78,9 +79,20 @@
                 }
                 selectedProgram = (selectedProgram === element) ? null : element;
                 document.getElementById('selected-program').value = selectedProgram ? selectedProgram.textContent : '';
+
+                // Show or hide the main class input based on the selected program
+                const mainClassInput = document.getElementById('main-class');
+                if (selectedProgram && selectedProgram.textContent.endsWith('.jar')) {
+                    mainClassInput.style.display = 'block';
+                } else {
+                    mainClassInput.style.display = 'none';
+                }
             }
             element.classList.toggle('selected');
         }
+
+        // Initially hide the main class input field
+        document.getElementById('main-class').style.display = 'none';
     </script>
 </body>
 </html>

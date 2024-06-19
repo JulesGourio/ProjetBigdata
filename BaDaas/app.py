@@ -42,8 +42,12 @@ def execute_job():
     program_path = os.path.join(app.config['UPLOAD_FOLDER'], 'programs', program)
     output_local_path = os.path.join(app.config['UPLOAD_FOLDER'], 'output', 'team_stats.csv')
 
-    # Exécuter le job Spark
-    subprocess.run(['spark-submit', program_path, input_path, output_path])
+    if program.endswith('.py'):
+        # Exécuter le job Spark avec un script PySpark
+        subprocess.run(['spark-submit', program_path, input_path, output_path])
+    elif program.endswith('.jar'):
+        # Exécuter le job Spark avec un fichier .jar
+        subprocess.run(['spark-submit', '--class', 'MainClass', program_path, input_path, output_path])
 
     # Récupérer les résultats depuis HDFS vers le système de fichiers local
     subprocess.run(['hdfs', 'dfs', '-get', output_path + '/*', output_local_path])
